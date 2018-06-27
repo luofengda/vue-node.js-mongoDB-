@@ -7,11 +7,20 @@ import 'bulma/css/bulma.css'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import axios from 'axios';
-import http from './assets/js/http.js'
+import http from './assets/js/http.js';
+import VueLazyload from 'vue-lazyload'
 
 import '@/assets/css/index.css'
 Vue.config.productionTip = false
 Vue.use(iView);
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  // error: 'dist/error.png',
+  loading: '/static/loading-svg/loading-bars.svg',
+  attempt: 1
+})
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
