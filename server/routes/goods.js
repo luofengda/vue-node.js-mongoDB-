@@ -35,7 +35,23 @@ mongoose.connection.on('disconnected', function () {
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.send('商品列表，进入路由了');
+    Goods.find({},(err,doc)=>{
+        if (err) {
+            res.json({
+                status:"1",
+                msg:err.message
+            })
+        }else{
+            res.json({
+                status:"0",
+                msg:'',
+                result:{
+                    count:doc.length,
+                    list:doc
+                }
+            })
+        }
+    })
   });
 
   module.exports = router;
