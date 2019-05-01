@@ -37,7 +37,7 @@
               <li v-for="(item, index) in goodsData">
                 <div class="pic">
                   <a href="#">
-                    <img v-lazy="'/static/'+item.prodcutImg" alt width="150px" height="100px">
+                    <img v-lazy="'/static/'+item.productImage" alt width="150px" height="100px">
                   </a>
                 </div>
                 <div class="main">
@@ -90,8 +90,8 @@ export default {
   components: {},
   methods: {
     getData() {
-      axios.get("/server/goods").then(res => {
-        this.goodsData = res.data.result;
+      axios.get("/goods").then(res => {
+        this.goodsData = res.data.result.list;
         console.log(res.data.result);
         if (res.status === 0) {
           console.log(res);
