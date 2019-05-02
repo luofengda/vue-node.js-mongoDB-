@@ -49,6 +49,11 @@
                 </div>
               </li>
             </ul>
+            <div
+              v-infinite-scroll="loadMore"
+              infinite-scroll-disabled="busy"
+              infinite-scroll-distance="10"
+            >加载中啊啊啊啊 。。。。。。。。。。。。。</div>
           </div>
         </div>
       </div>
@@ -63,9 +68,10 @@ export default {
     return {
       goodsData: [],
       //排序
-      sortFlag:true,
-      page:1,
-      pageSize:8,
+      sortFlag: true,
+      page: 1,
+      pageSize: 4,
+      busy: false,
       priceData: [
         {
           startPrice: "0.00",
@@ -105,29 +111,48 @@ export default {
     /**
      * 查询数据
      */
-    getGoodsList(){
-      let param= {
-        page:this.page,
-        pageSize:this.pageSize,
-        sort:this.sortFlag?1:-1
-      }
-     axios.get("/goods",{
-       params:param
-     }).then(res => {
-        this.goodsData = res.data.result.list;
-        console.log(res.data.result);
-        if (res.status === 0) {
-          console.log(res);
-        }
-      });
+    getGoodsList(falg) {
+      let param = {
+        page: this.page,
+        pageSize: this.pageSize,
+        sort: this.sortFlag ? 1 : -1
+      };
+      axios
+        .get("/goods", {
+          params: param
+        })
+        .then(res => {
+          if (falg) {
+             this.goodsData = this.goodsData.concat(res.data.result.list);
+            //  没有数据的时候 禁止滚动
+             if (res.data.result.count==0) {
+               this.busy=true
+             }else {
+               this.busy=false
+             }
+          } else {
+            this.goodsData = res.data.result.list;
+            this.busy=false
+          }
+        });
     },
     /**
      * 排序
      */
-    sortGoods(){
-      this.sortFlag=!this.sortFlag
-      this.page=1
-      this.getGoodsList()
+    sortGoods() {
+      this.sortFlag = !this.sortFlag;
+      this.page = 1;
+      this.getGoodsList();
+    },
+    /**
+     * 滚动代码
+     */
+    loadMore() {
+      this.busy = true;
+      setTimeout(() => {
+        this.page++;
+        this.getGoodsList(true);
+      }, 800);
     },
     showFilterPop() {
       this.filterBy = true;

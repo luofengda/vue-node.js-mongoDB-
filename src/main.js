@@ -9,10 +9,12 @@ import 'iview/dist/styles/iview.css';
 import axios from 'axios';
 import http from './assets/js/http.js';
 import VueLazyload from 'vue-lazyload'
-
+// 下拉加载
+import infiniteScroll from 'vue-infinite-scroll'
 import '@/assets/css/index.css'
 Vue.config.productionTip = false
 Vue.use(iView);
+Vue.use(infiniteScroll);
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   // error: 'dist/error.png',
