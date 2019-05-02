@@ -33,9 +33,23 @@ mongoose.connection.on('disconnected', function () {
     console.log('Mongoose connection disconnected');  
 });   
 
-/* GET users listing. */
+/* 查询数据 */
 router.get('/', function(req, res, next) {
-    Goods.find({},(err,doc)=>{
+    // get的请求，可以通过param获取浏览器的参数
+    // 分页
+    let page = parseInt(req.param("page")) 
+    let pageSize = parseInt(req.param("pageSize"))
+    let skip =parseInt((page - 1)*pageSize)
+
+
+    let sort = req.param("sort")
+    let params = {}
+    // 每个条件都是个{}对象，
+    // 获取返回数据模型
+    let GoodsModel = Goods.find(params).skip(skip).limit(pageSize)
+    // 排序的时候，需要指定排序的字段 升序：1 ，降序：-1
+    GoodsModel.sort({'salePrice':sort})
+    GoodsModel.exec((err,doc)=>{
         if (err) {
             res.json({
                 status:"1",

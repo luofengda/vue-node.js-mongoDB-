@@ -3,7 +3,7 @@
     <div class="container">
       <div class="filter-nav">
         <span class="sortby">Sort by:</span>
-        <a href="javascript:void(0)" class="default cur">Default</a>
+        <a href="javascript:void(0)" class="default cur" @click="sortGoods">Default</a>
         <a href="javascript:void(0)" class="price">
           Price
           <svg class="icon icon-arrow-short">
@@ -42,7 +42,7 @@
                 </div>
                 <div class="main">
                   <div class="name">{{item.productName}}</div>
-                  <div class="price">{{item.prodcutPrice}}</div>
+                  <div class="price">{{item.salePrice}}</div>
                   <div class="btn-area">
                     <a href="javascript:;" class="btn btn--m">加入购物车</a>
                   </div>
@@ -62,6 +62,10 @@ export default {
   data() {
     return {
       goodsData: [],
+      //排序
+      sortFlag:true,
+      page:1,
+      pageSize:8,
       priceData: [
         {
           startPrice: "0.00",
@@ -85,18 +89,45 @@ export default {
   },
   created() {},
   mounted() {
-    this.getData();
+    this.getGoodsList();
   },
   components: {},
   methods: {
-    getData() {
-      axios.get("/goods").then(res => {
+    // getData() {
+    //   axios.get("/goods").then(res => {
+    //     this.goodsData = res.data.result.list;
+    //     console.log(res.data.result);
+    //     if (res.status === 0) {
+    //       console.log(res);
+    //     }
+    //   });
+    // },
+    /**
+     * 查询数据
+     */
+    getGoodsList(){
+      let param= {
+        page:this.page,
+        pageSize:this.pageSize,
+        sort:this.sortFlag?1:-1
+      }
+     axios.get("/goods",{
+       params:param
+     }).then(res => {
         this.goodsData = res.data.result.list;
         console.log(res.data.result);
         if (res.status === 0) {
           console.log(res);
         }
       });
+    },
+    /**
+     * 排序
+     */
+    sortGoods(){
+      this.sortFlag=!this.sortFlag
+      this.page=1
+      this.getGoodsList()
     },
     showFilterPop() {
       this.filterBy = true;
