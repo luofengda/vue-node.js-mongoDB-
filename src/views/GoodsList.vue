@@ -53,7 +53,12 @@
               v-infinite-scroll="loadMore"
               infinite-scroll-disabled="busy"
               infinite-scroll-distance="10"
-            >加载中啊啊啊啊 。。。。。。。。。。。。。</div>
+            >
+              <div class="lds-ripple" v-show="loading">
+                <div></div>
+                <div></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -72,9 +77,14 @@ export default {
       page: 1,
       pageSize: 4,
       busy: false,
+      loading:false,
       priceData: [
         {
           startPrice: "0.00",
+          endPrice: "100.00"
+        },
+        {
+          startPrice: "100.00",
           endPrice: "500.00"
         },
         {
@@ -83,7 +93,7 @@ export default {
         },
         {
           startPrice: "1000.00",
-          endPrice: "2000.00"
+          endPrice: "5000.00"
         }
       ],
       priceChecked: "all",
@@ -99,15 +109,6 @@ export default {
   },
   components: {},
   methods: {
-    // getData() {
-    //   axios.get("/goods").then(res => {
-    //     this.goodsData = res.data.result.list;
-    //     console.log(res.data.result);
-    //     if (res.status === 0) {
-    //       console.log(res);
-    //     }
-    //   });
-    // },
     /**
      * 查询数据
      */
@@ -115,24 +116,27 @@ export default {
       let param = {
         page: this.page,
         pageSize: this.pageSize,
-        sort: this.sortFlag ? 1 : -1
+        sort: this.sortFlag ? 1 : -1,
+        priceLevel: this.priceChecked
       };
+      this.loading=true,
       axios
         .get("/goods", {
           params: param
         })
         .then(res => {
+           this.loading=false
           if (falg) {
-             this.goodsData = this.goodsData.concat(res.data.result.list);
+            this.goodsData = this.goodsData.concat(res.data.result.list);
             //  没有数据的时候 禁止滚动
-             if (res.data.result.count==0) {
-               this.busy=true
-             }else {
-               this.busy=false
-             }
+            if (res.data.result.count == 0) {
+              this.busy = true;
+            } else {
+              this.busy = false;
+            }
           } else {
             this.goodsData = res.data.result.list;
-            this.busy=false
+            this.busy = false;
           }
         });
     },
@@ -162,8 +166,14 @@ export default {
       this.filterBy = false;
       this.overLayFlag = false;
     },
+
+    /**
+     *价格过滤
+     */
     setPriceFilter(index) {
       this.priceChecked = index;
+      this.page = 1;
+      this.getGoodsList();
       this.closePop();
     }
   }
@@ -175,5 +185,38 @@ li {
 }
 .price {
   color: red;
+}
+
+.lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-ripple div {
+  position: absolute;
+  border: 4px solid rgb(148, 173, 219);
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 28px;
+    left: 28px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: -1px;
+    left: -1px;
+    width: 58px;
+    height: 58px;
+    opacity: 0;
+  }
 }
 </style>
