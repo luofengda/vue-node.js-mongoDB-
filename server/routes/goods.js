@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require("mongoose")
 var Goods = require("../models/goods")
-
+var User = require("../models/userModel")
 // 连接数据库
 var DB_URL = 'mongodb://127.0.0.1:27017/vueDataBase';
 
@@ -33,7 +33,7 @@ mongoose.connection.on('disconnected', function () {
     console.log('Mongoose connection disconnected');
 });
 
-/* 查询数据 */
+/* 查询商品列表 */
 router.get('/', function (req, res, next) {
     let params = {}
     // get的请求，可以通过param获取浏览器的参数
@@ -100,5 +100,76 @@ router.get('/', function (req, res, next) {
         }
     })
 });
+
+// 加入购物车
+router.post("/addCart",(req, res, next)=>{
+    let userId="100000077", productId=req.body.productId, goodsItem="";
+    User.findOne({userId:userId},(err,userDoc)=>{
+        if (err) {
+            res.json({
+                status: "1",
+                msg: err.message
+            })
+        } else {
+            if(userDoc){
+                // 如果表中已经包含了同样的商品就++
+                userDoc.cartList.forEach((item)=>{
+                    if(item.productId==productId){
+                        goodsItem=item;
+                        item.productNum ++;
+                    }
+                })
+               
+                if(goodsItem){
+                    userDoc.save((err2,doc2)=>{
+                        if(err2){
+                         res.json({
+                             status: "1",
+                             msg: err2.message
+                         })
+                        }else {
+                         res.json({
+                             status: "0",
+                             msg: "",
+                             result:"suc"
+                         })
+                        }
+                     })
+                }else{
+
+                Goods.findOne({productId:productId},(err1,doc)=>{
+                    if (err1) {
+                        res.json({
+                            status: "1",
+                            msg: err1.message
+                        })
+                    } else {
+                       if(doc){
+                        doc.productNum=1
+                        doc.checked=1
+                        userDoc.cartList.push(doc)
+                        userDoc.save((err2,doc2)=>{
+                           if(err2){
+                            res.json({
+                                status: "1",
+                                msg: err2.message
+                            })
+                           }else {
+                            res.json({
+                                status: "0",
+                                msg: "",
+                                result:"suc"
+                            })
+                           }
+                        })
+                       }
+                    }
+                })
+            }
+            }
+        }
+    })
+})
+
 
 module.exports = router;

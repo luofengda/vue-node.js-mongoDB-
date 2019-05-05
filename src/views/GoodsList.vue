@@ -44,7 +44,7 @@
                   <div class="name">{{item.productName}}</div>
                   <div class="price">{{item.salePrice}}</div>
                   <div class="btn-area">
-                    <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                    <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                   </div>
                 </div>
               </li>
@@ -77,7 +77,7 @@ export default {
       page: 1,
       pageSize: 4,
       busy: false,
-      loading:false,
+      loading: false,
       priceData: [
         {
           startPrice: "0.00",
@@ -119,26 +119,26 @@ export default {
         sort: this.sortFlag ? 1 : -1,
         priceLevel: this.priceChecked
       };
-      this.loading=true,
-      axios
-        .get("/goods", {
-          params: param
-        })
-        .then(res => {
-           this.loading=false
-          if (falg) {
-            this.goodsData = this.goodsData.concat(res.data.result.list);
-            //  没有数据的时候 禁止滚动
-            if (res.data.result.count == 0) {
-              this.busy = true;
+      (this.loading = true),
+        axios
+          .get("/goods", {
+            params: param
+          })
+          .then(res => {
+            this.loading = false;
+            if (falg) {
+              this.goodsData = this.goodsData.concat(res.data.result.list);
+              //  没有数据的时候 禁止滚动
+              if (res.data.result.count == 0) {
+                this.busy = true;
+              } else {
+                this.busy = false;
+              }
             } else {
+              this.goodsData = res.data.result.list;
               this.busy = false;
             }
-          } else {
-            this.goodsData = res.data.result.list;
-            this.busy = false;
-          }
-        });
+          });
     },
     /**
      * 排序
@@ -175,6 +175,23 @@ export default {
       this.page = 1;
       this.getGoodsList();
       this.closePop();
+    },
+    /**
+     * 加入购物车
+     */
+    addCart(productId) {
+      axios
+        .post("/goods/addCart", {
+          productId: productId
+        })
+        .then(res => {
+          console.log(res.data);
+          if (res.data.status == 0) {
+            alert("加入购物成功");
+          } else {
+            alert("无法添加！！！");
+          }
+        });
     }
   }
 };

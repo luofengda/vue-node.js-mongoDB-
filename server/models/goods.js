@@ -7,6 +7,8 @@ var produtSchema = new Schema({
     "productId":{type:String},
     "productName" : String,
     "salePrice" : Number,
+    "checked":String,
+    "productNum":Number,
     "productImage" : String
 })
 // 导出
