@@ -13,7 +13,7 @@ import VueLazyload from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
 import '@/assets/css/index.css'
 Vue.config.productionTip = false
-Vue.use(iView);
+// Vue.use(iView);
 Vue.use(infiniteScroll);
 Vue.use(VueLazyload, {
   preLoad: 1.3,

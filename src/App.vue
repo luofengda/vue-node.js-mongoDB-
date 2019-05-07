@@ -1,15 +1,6 @@
 <template>
   <div id="app">
-    <Layout>
-        <Header>Header</Header>
-          <Breadcrumb>
-        <BreadcrumbItem to="/">Home</BreadcrumbItem>
-        <BreadcrumbItem to="/components/breadcrumb">Components</BreadcrumbItem>
-        <BreadcrumbItem>Breadcrumb</BreadcrumbItem>
-    </Breadcrumb>
-        <Content><router-view/></Content>
-        <Footer>Footer</Footer>
-    </Layout>
+     <router-view></router-view>
   </div>
 </template>
 

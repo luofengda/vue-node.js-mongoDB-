@@ -1,5 +1,6 @@
 <template>
   <div class="accessory-result-page accessory-page">
+    <nav-header></nav-header>
     <div class="container">
       <div class="filter-nav">
         <span class="sortby">Sort by:</span>
@@ -67,6 +68,7 @@
   </div>
 </template>
 <script >
+import NavHeader from "./../components/NavHeader";
 import axios from "axios";
 export default {
   data() {
@@ -107,7 +109,9 @@ export default {
   mounted() {
     this.getGoodsList();
   },
-  components: {},
+  components: {
+    NavHeader
+  },
   methods: {
     /**
      * 查询数据
