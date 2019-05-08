@@ -55,8 +55,13 @@
       <div class="navbar-right-container" style="display: flex;">
         <div class="navbar-menu-container">
           <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
-          <a href="javascript:void(0)" class="navbar-link" v-if="!nickName">Login</a>
-          <a href="javascript:void(0)" class="navbar-link" v-else>Logout</a>
+          <a
+            href="javascript:void(0)"
+            class="navbar-link"
+            v-if="!nickName"
+            @click="loginModalFlag=true"
+          >登录</a>
+          <a href="javascript:void(0)" class="navbar-link" v-else @click="logout">退出</a>
           <div class="navbar-cart-container">
             <!-- <span class="navbar-cart-count" v-text="cartCount" v-if="cartCount"></span> -->
             <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -72,7 +77,7 @@
       <div class="md-modal-inner">
         <div class="md-top">
           <div class="md-title">Login in</div>
-          <button class="md-close">Close</button>
+          <button class="md-close" @click="loginModalFlag=false">Close</button>
         </div>
         <div class="md-content">
           <div class="confirm-tips">
@@ -107,7 +112,7 @@
             </ul>
           </div>
           <div class="login-wrap">
-            <a href="javascript:;" class="btn-login">登 录</a>
+            <a href="javascript:;" class="btn-login" @click="login">登 录</a>
           </div>
         </div>
       </div>
@@ -119,12 +124,12 @@
 <script>
 import "./../assets/css/login.css";
 import axios from "axios";
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
 export default {
   data() {
     return {
-      userName: "admin",
-      userPwd: "123456",
+      userName: "",
+      userPwd: "",
       errorTip: false,
       loginModalFlag: false,
       nickName: ""
@@ -132,7 +137,37 @@ export default {
   },
   computed: {},
   mounted() {},
-  methods: {}
+  methods: {
+    login() {
+      if (!this.userName || !this.userPwd) {
+        this.errorTip = true;
+        return;
+      }
+      axios
+        .post("/users/login", {
+          userName: this.userName,
+          userPwd: this.userPwd
+        })
+        .then(res => {
+          let resData = res.data;
+          if (resData.status == "0") {
+            this.nickName = resData.result.userName;
+            this.errorTip = false;
+            this.loginModalFlag = false;
+          } else {
+            this.errorTip = true;
+          }
+        });
+    },
+    logout() {
+      axios.post("/users/logout").then(res => {
+        let resData = res.data;
+        if (resData.status == "0") {
+          this.nickName = "";
+        }
+      });
+    }
+  }
 };
 </script>
 <style>
