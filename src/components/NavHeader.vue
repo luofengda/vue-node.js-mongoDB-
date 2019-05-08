@@ -136,8 +136,18 @@ export default {
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.checkLogin();
+  },
   methods: {
+    checkLogin() {
+      axios.get("/users/checkLogin").then(res => {
+        let resData = res.data;
+        if (resData.status == "0") {
+          this.nickName = resData.result.userName;
+        }
+      });
+    },
     login() {
       if (!this.userName || !this.userPwd) {
         this.errorTip = true;

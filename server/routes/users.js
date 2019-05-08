@@ -22,7 +22,11 @@ router.post('/login', (req, res, next) => {
       })
     } else {
       if (doc) {
-        res.cookie("userId", doc.userId,{
+        res.cookie("userId", doc.userId, {
+          path: '/',
+          maxAge: 1000 * 60 * 60
+        })
+        res.cookie("userName", doc.userName, {
           path: '/',
           maxAge: 1000 * 60 * 60
         })
@@ -41,17 +45,35 @@ router.post('/login', (req, res, next) => {
 /**
  * 退出
  */
-router.post("/logout",(req,res,next)=>{
-  res.cookie("userId","",{
-    path:'/',
-    maxAge:"-1"
+router.post("/logout", (req, res, next) => {
+  res.cookie("userId", "", {
+    path: '/',
+    maxAge: "-1"
   })
   res.json({
-    status:"0",
-    msg:"",
-    result:''
+    status: "0",
+    msg: "",
+    result: ''
   })
 })
 
+/**
+ * 校验用户信息
+ */
+router.get("checkLogin", (req, res, next) => {
+  if (req.cookies.userId) {
+    res.json({
+      status: "0",
+      msg: "",
+      result: req.cookies.userName||''
+    })
+  } else {
+    res.json({
+      status: "0",
+      msg: "",
+      result: ''
+    })
+  }
+})
 
 module.exports = router;

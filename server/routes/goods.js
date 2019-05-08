@@ -34,7 +34,7 @@ mongoose.connection.on('disconnected', function () {
 });
 
 /* 查询商品列表 */
-router.get('/', function (req, res, next) {
+router.get('/list', function (req, res, next) {
     let params = {}
     // get的请求，可以通过param获取浏览器的参数
     // 分页

@@ -125,7 +125,7 @@ export default {
       };
       (this.loading = true),
         axios
-          .get("/goods", {
+          .get("/goods/list", {
             params: param
           })
           .then(res => {
@@ -193,7 +193,7 @@ export default {
           if (res.data.status == 0) {
             alert("加入购物成功");
           } else {
-            alert("无法添加！！！");
+            alert(res.data.msg);
           }
         });
     }
