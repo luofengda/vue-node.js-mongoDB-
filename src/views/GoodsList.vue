@@ -4,7 +4,7 @@
     <div class="container">
       <div class="filter-nav">
         <span class="sortby">Sort by:</span>
-        <a href="javascript:void(0)" class="default cur" >Default</a>
+        <a href="javascript:void(0)" class="default cur">Default</a>
         <a href="javascript:void(0)" class="price" @click="sortGoods">
           Price
           <svg class="icon icon-arrow-short" v-bind:class="{'sort-up':sortFlag}">
@@ -240,8 +240,12 @@ li {
     opacity: 0;
   }
 }
-.sort-up{
+.sort-up {
   transform: rotate(180deg);
-  transition: all .3s ease-out
+  transition: all 0.3s ease-out;
+}
+.btn:hover {
+ background-color: #ffe5e6;
+  transition: all 0.3s ease-out;
 }
 </style>
