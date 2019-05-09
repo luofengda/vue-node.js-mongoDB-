@@ -65,17 +65,38 @@
       </div>
     </div>
     <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
+    <Modal v-bind:mdShow="mdShow" v-on:close="closeModal">
+      <p slot="message">请先登录，否则无法添加到购物车中。</p>
+      <div slot="btnGroup">
+        <a href="javascript:;" class="btn btn-m" @click="mdShow=false">关闭</a>
+      </div>
+    </Modal>
+    <Modal v-bind:mdShow="mdShowCart" v-on:close="closeModal">
+      <p slot="message">
+        <svg class="icon-status-ok">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
+        </svg>
+        <span>加入购物成功！</span>
+      </p>
+      <div slot="btnGroup">
+        <a href="javascript:;" class="btn btn-m" @click="mdShowCart=false">继续购物</a>
+        <router-link href="javascript:;" class="btn btn-m" to="/cart">查看购物车</router-link>
+      </div>
+    </Modal>
   </div>
 </template>
 <script >
 import NavHeader from "./../components/NavHeader";
 import axios from "axios";
+import Modal from "./../components/Modal";
 export default {
   data() {
     return {
       goodsData: [],
       //排序
       sortFlag: true,
+      mdShow: false,
+      mdShowCart: false,
       page: 1,
       pageSize: 4,
       busy: false,
@@ -110,7 +131,8 @@ export default {
     this.getGoodsList();
   },
   components: {
-    NavHeader
+    NavHeader,
+    Modal
   },
   methods: {
     /**
@@ -191,11 +213,14 @@ export default {
         .then(res => {
           console.log(res.data);
           if (res.data.status == 0) {
-            alert("加入购物成功");
+            this.mdShowCart = true;
           } else {
-            alert(res.data.msg);
+            this.mdShow = true;
           }
         });
+    },
+    closeModal() {
+      this.mdShow = false;
     }
   }
 };
@@ -245,7 +270,7 @@ li {
   transition: all 0.3s ease-out;
 }
 .btn:hover {
- background-color: #ffe5e6;
+  background-color: #ffe5e6;
   transition: all 0.3s ease-out;
 }
 </style>
