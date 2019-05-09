@@ -4,10 +4,10 @@
     <div class="container">
       <div class="filter-nav">
         <span class="sortby">Sort by:</span>
-        <a href="javascript:void(0)" class="default cur" @click="sortGoods">Default</a>
-        <a href="javascript:void(0)" class="price">
+        <a href="javascript:void(0)" class="default cur" >Default</a>
+        <a href="javascript:void(0)" class="price" @click="sortGoods">
           Price
-          <svg class="icon icon-arrow-short">
+          <svg class="icon icon-arrow-short" v-bind:class="{'sort-up':sortFlag}">
             <use xlink:href="#icon-arrow-short"></use>
           </svg>
         </a>
@@ -239,5 +239,9 @@ li {
     height: 58px;
     opacity: 0;
   }
+}
+.sort-up{
+  transform: rotate(180deg);
+  transition: all .3s ease-out
 }
 </style>
