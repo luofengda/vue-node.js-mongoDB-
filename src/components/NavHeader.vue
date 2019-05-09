@@ -128,8 +128,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      userName: "",
-      userPwd: "",
+      userName: "admin",
+      userPwd: "123456",
       errorTip: false,
       loginModalFlag: false,
       nickName: ""
@@ -144,7 +144,8 @@ export default {
       axios.get("/users/checkLogin").then(res => {
         let resData = res.data;
         if (resData.status == "0") {
-          this.nickName = resData.result.userName;
+          this.nickName = resData.result;
+            this.loginModalFlag = false;
         }
       });
     },

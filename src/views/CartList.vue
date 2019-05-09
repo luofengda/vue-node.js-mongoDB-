@@ -117,6 +117,7 @@
           </h2>
         </div>
         <div class="item-list-wrap">
+          {{cartList}}
           <div class="cart-item">
             <div class="cart-item-head">
               <ul>
@@ -128,7 +129,7 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li>
+              <li v-for="(item, index) in this.cartList" :key="index">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
                     <a href="javascipt:;" class="checkbox-btn item-check-btn">
@@ -138,28 +139,28 @@
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img src="/static/1.jpg">
+                    <img v-bind:src="'/static/'+item.productImage" v-bind:alt="item.productName">
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name">XX</div>
+                    <div class="item-name">{{item.productName}}</div>
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">1000</div>
+                  <div class="item-price">{{item.salePrice}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
                         <a class="input-sub">-</a>
-                        <span class="select-ipt">10</span>
+                        <span class="select-ipt">{{item.productNum}}</span>
                         <a class="input-add">+</a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">100</div>
+                  <div class="item-price-total">{{item.salePrice*item.productNum}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
@@ -215,13 +216,28 @@ import axios from "axios";
 import Modal from "./../components/Modal";
 export default {
   data() {
-    return {};
+    return {
+      cartList: []
+    };
   },
   components: {
     NavHeader,
     NavFooter,
     NavBread,
     Modal
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    init() {
+      axios.get("/users/cartList").then(res => {
+        let resData = res.data;
+        if (resData.status == 0) {
+          this.cartList = resData.result;
+        }
+      });
+    }
   }
 };
 </script>
