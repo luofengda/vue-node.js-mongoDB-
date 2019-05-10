@@ -152,9 +152,9 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub">-</a>
+                        <a class="input-sub" @click="editCart('minu',item)">-</a>
                         <span class="select-ipt">{{item.productNum}}</span>
-                        <a class="input-add">+</a>
+                        <a class="input-add" @click="editCart('add',item)">+</a>
                       </div>
                     </div>
                   </div>
@@ -164,7 +164,11 @@
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn">
+                    <a
+                      href="javascript:;"
+                      class="item-edit-btn"
+                      @click="delCartConfirm(item.productId)"
+                    >
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -202,7 +206,13 @@
         </div>
       </div>
     </div>
-    <Modal></Modal>
+    <Modal v-bind:mdShow="modalConfirm" v-on:close="closeModal">
+      <p slot="message">是否删除该商品？</p>
+      <div slot="btnGroup" :mdShow="modalConfirm">
+        <a href="javascript:;" class="btn btn-m" @click="delCart">确认</a>
+        <a href="javascript:;" class="btn btn-m" @click="modalConfirm=false">关闭</a>
+      </div>
+    </Modal>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -217,7 +227,9 @@ import Modal from "./../components/Modal";
 export default {
   data() {
     return {
-      cartList: []
+      cartList: [],
+      productId: "",
+      modalConfirm: false
     };
   },
   components: {
@@ -237,6 +249,34 @@ export default {
           this.cartList = resData.result;
         }
       });
+    },
+    closeModal() {
+      this.modalConfirm = false;
+    },
+    /**
+     * 商品列表中的删除
+     */
+    delCartConfirm(productId) {
+      console.log("删除");
+      this.productId = productId;
+      this.modalConfirm = true;
+    },
+    /**
+     * 模态框中的删除
+     */
+    delCart() {
+      axios
+        .post("/users/cartDel", {
+          productId: this.productId
+        })
+        .then(res => {
+          let resData = res.data;
+          if (resData.status == 0) {
+            this.productId = "";
+            this.modalConfirm = false;
+            this.init();
+          }
+        });
     }
   }
 };

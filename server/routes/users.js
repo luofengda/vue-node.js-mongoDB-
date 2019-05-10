@@ -98,9 +98,31 @@ router.get('/cartList', (req, res, next) => {
       }
     }
   })
-
-
 })
+
+/**
+ * 购物车删除
+ */
+router.post('/cartDel', (req, res, next) => {
+  let userId = req.cookies.userId, productId = req.body.productId
+  User.update({ userId: userId }, { $pull: { 'cartList': { 'productId': productId } } }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: "0",
+          msg: "",
+          result: '删除成功'
+        })
+      }
+    }
+  })
+})
+
 
 
 module.exports = router;
