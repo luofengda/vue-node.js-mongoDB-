@@ -123,6 +123,28 @@ router.post('/cartDel', (req, res, next) => {
   })
 })
 
+/**
+ * 编辑购物车商品数量
+ */
 
+router.post('/cartEdit', (req, res, next) => {
+  let userId = req.cookies.userId, productId = req.body.productId, productNum = req.body.productNum,checked= req.body.checked
+  User.update({ userId: userId, "cartList.productId": productId }, { "cartList.$.productNum": productNum ,"cartList.$.checked": checked }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: "0",
+          msg: "",
+          result: ''
+        })
+      }
+    }
+  })
+})
 
 module.exports = router;

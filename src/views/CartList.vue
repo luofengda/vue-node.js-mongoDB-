@@ -132,7 +132,7 @@
               <li v-for="(item, index) in this.cartList" :key="index">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn">
+                    <a @click="editCart('checked',item)" href="javascipt:;" class="checkbox-btn item-check-btn  " v-bind:class="{'check':item.checked=='1'}">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -275,6 +275,36 @@ export default {
             this.productId = "";
             this.modalConfirm = false;
             this.init();
+          }
+        });
+    },
+    /**
+     * 编辑购物车
+     */
+    editCart(flag, item) {
+      if (flag == "add") {
+        item.productNum++;
+      } else if(flag=="minu") {
+        if (item.productNum <= 1) {
+          return;
+        }
+        item.productNum--;
+      }else {
+        if (item.checked=='1') {
+           item.checked='0'
+        } else {
+           item.checked='1'
+        }
+      }
+      axios
+        .post("/users/cartEdit", {
+          productId: item.productId,
+          productNum: item.productNum,
+          checked:item.checked
+        })
+        .then(res => {
+          let resData = res.data;
+          if (resData.status == 0) {
           }
         });
     }
