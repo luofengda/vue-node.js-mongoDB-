@@ -9,6 +9,7 @@ import 'iview/dist/styles/iview.css';
 import axios from 'axios';
 import http from './assets/js/http.js';
 import VueLazyload from 'vue-lazyload'
+import {currency} from './util/currency'
 // 下拉加载
 import infiniteScroll from 'vue-infinite-scroll'
 import '@/assets/css/index.css'
@@ -21,7 +22,8 @@ Vue.use(VueLazyload, {
   loading: '/static/loading-svg/loading-bars.svg',
   attempt: 1
 })
-
+//全局过滤器
+Vue.filter("currency",currency)
 
 /* eslint-disable no-new */
 new Vue({

@@ -128,8 +128,8 @@ router.post('/cartDel', (req, res, next) => {
  */
 
 router.post('/cartEdit', (req, res, next) => {
-  let userId = req.cookies.userId, productId = req.body.productId, productNum = req.body.productNum,checked= req.body.checked
-  User.update({ userId: userId, "cartList.productId": productId }, { "cartList.$.productNum": productNum ,"cartList.$.checked": checked }, (err, doc) => {
+  let userId = req.cookies.userId, productId = req.body.productId, productNum = req.body.productNum, checked = req.body.checked
+  User.update({ userId: userId, "cartList.productId": productId }, { "cartList.$.productNum": productNum, "cartList.$.checked": checked }, (err, doc) => {
     if (err) {
       res.json({
         status: "1",
@@ -146,5 +146,39 @@ router.post('/cartEdit', (req, res, next) => {
     }
   })
 })
+
+// 商品全选或反选
+router.post('/editCheckAll', (req, res, next) => {
+  let userId = req.cookies.userId, checkAll = req.body.checkAll ? '1' : '0'
+  User.findOne({ userId: userId }, (err, user) => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      if (user) {
+        user.cartList.forEach(item => {
+          item.checked = checkAll
+        });
+        user.save((err1, doc) => {
+          if (err1) {
+            res.json({
+              status: "1",
+              msg: err1.message
+            })
+          } else {
+            res.json({
+              status: "0",
+              msg: "",
+              result: ''
+            })
+          }
+        })
+      }
+    }
+  })
+})
+
 
 module.exports = router;
