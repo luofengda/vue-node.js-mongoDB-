@@ -180,5 +180,26 @@ router.post('/editCheckAll', (req, res, next) => {
   })
 })
 
-
+/**
+ * 查询当前用户的地址列表
+ */
+router.get('/addressList', (req, res, next) => {
+  let userId = req.cookies.userId;
+  User.findOne({ userId: userId }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: "0",
+          msg: "",
+          result: doc.addressList
+        })
+      }
+    }
+  })
+})
 module.exports = router;
