@@ -203,7 +203,7 @@
                 <span class="total-price">{{togglePrice|currency("$")}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red">结算</a>
+                <a class="btn btn--red" v-bind:class="{'btn--dis':checkCount==0}" @click="checkAll">结算</a>
               </div>
             </div>
           </div>
@@ -351,6 +351,17 @@ export default {
             console.log('全选或者反选成功');
           }
       })
+    },
+    /**
+     * 跳转到地址列表页面
+     */
+    checkAll(){
+      console.log(this.checkCount);
+      if (this.checkCount>0) {
+        this.$router.push({
+          path:'/address'
+        })
+      }
     }
   }
 };
