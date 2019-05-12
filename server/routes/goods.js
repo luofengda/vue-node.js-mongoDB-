@@ -5,7 +5,7 @@ var mongoose = require("mongoose")
 var Goods = require("../models/goods")
 var User = require("../models/userModel")
 // 连接数据库
-var DB_URL = 'mongodb://127.0.0.1:27017/vueDataBase';
+var DB_URL = 'mongodb://192.168.1.9:27017/vueDataBase';
 
 /**
  * 连接

@@ -104,26 +104,20 @@
           <!-- address list -->
           <div class="page-title-normal checkout-title">
             <h2>
-              <span>收货地址</span> 
+              <span>收货地址</span>
             </h2>
           </div>
           <div class="addr-list-wrap">
             <div class="addr-list">
               <ul>
-                {{addressList}}
-                <li
-                  v-for="(item,index) in addressList"
-                >
+                <li v-for="(item,index) in addressListFilter" @click="checkIndex=index" v-bind:class="{'check':checkIndex==index}">
                   <dl>
                     <dt>{{item.userName}}</dt>
                     <dd class="address">{{item.streetName}}</dd>
                     <dd class="tel">{{item.tel}}</dd>
                   </dl>
                   <div class="addr-opration addr-del">
-                    <a
-                      href="javascript:;"
-                      class="addr-del-btn"
-                    >
+                    <a href="javascript:;" class="addr-del-btn">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -158,9 +152,10 @@
               <a
                 class="addr-more-btn up-down-btn"
                 href="javascript:;"
+                @click="expand"
                 v-bind:class="{'open':limit>3}"
               >
-                more
+                更多
                 <i class="i-up-down">
                   <i class="i-up-down-l"></i>
                   <i class="i-up-down-r"></i>
@@ -219,7 +214,9 @@ import axios from "axios";
 export default {
   data() {
     return {
+      //地址默认展开的数据
       limit: 3,
+      //切换地址默认0个
       checkIndex: 0,
       selectedAddrId: "",
       addressList: [],
@@ -228,9 +225,13 @@ export default {
     };
   },
   mounted() {
-    this.init()
+    this.init();
   },
-  computed: {},
+  computed: {
+    addressListFilter() {
+      return this.addressList.slice(0, this.limit);
+    }
+  },
   components: {
     NavHeader,
     NavFooter,
@@ -246,11 +247,14 @@ export default {
         }
       });
     },
-    closeModal() {
-
-    },
-    delAddress() {
-
+    closeModal() {},
+    delAddress() {},
+    expand() {
+      if (this.limit == 3) {
+        this.limit = this.addressList.length;
+      }else {
+        this.limit=3
+      }
     }
   }
 };
