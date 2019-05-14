@@ -110,14 +110,18 @@
           <div class="addr-list-wrap">
             <div class="addr-list">
               <ul>
-                <li v-for="(item,index) in addressListFilter" @click="checkIndex=index" v-bind:class="{'check':checkIndex==index}">
+                <li
+                  v-for="(item,index) in addressListFilter"
+                  @click="checkIndex=index"
+                  v-bind:class="{'check':checkIndex==index}"
+                >
                   <dl>
                     <dt>{{item.userName}}</dt>
                     <dd class="address">{{item.streetName}}</dd>
                     <dd class="tel">{{item.tel}}</dd>
                   </dl>
                   <div class="addr-opration addr-del">
-                    <a href="javascript:;" class="addr-del-btn">
+                    <a href="javascript:;" class="addr-del-btn" @click="delAddress(item.addressId)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -130,7 +134,7 @@
                       v-if="!item.isDefault"
                       @click="setDefault(item.addressId)"
                     >
-                      <i>Set default</i>
+                      <i>设置为默认地址</i>
                     </a>
                   </div>
                   <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
@@ -142,7 +146,7 @@
                         <use xlink:href="#icon-add"></use>
                       </svg>
                     </i>
-                    <p>Add new address</p>
+                    <p>新增地址</p>
                   </div>
                 </li>
               </ul>
@@ -247,13 +251,53 @@ export default {
         }
       });
     },
-    closeModal() {},
-    delAddress() {},
+    /**
+     * 设置默认地址
+     */
+    setDefault(addressId) {
+      axios
+        .post("/users/setDefault", {
+          addressId: addressId
+        })
+        .then(res => {
+          let resData = res.data;
+          if (resData.status == 0) {
+            this.init();
+            console.log("地址设置成功");
+          }
+        });
+    },
+    /**
+     * 确认删除模态框
+     */
+    closeModal() {
+      this.isMdShow = false;
+    },
+    /**
+     * 删除地址
+     */
+    delAddress() {
+      this.isMdShow=true
+      // axios
+      //   .post("/users/cartDel", {
+      //     productId: addressId
+      //   })
+      //   .then(res => {
+      //     let resData = res.data;
+      //     if (resData.status == 0) {
+      //       this.isMdShow = false;
+      //       this.init();
+      //     }
+      //   });
+    },
+    /**
+     * 展开更多
+     */
     expand() {
       if (this.limit == 3) {
         this.limit = this.addressList.length;
-      }else {
-        this.limit=3
+      } else {
+        this.limit = 3;
       }
     }
   }

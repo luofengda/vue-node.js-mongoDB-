@@ -202,4 +202,54 @@ router.get('/addressList', (req, res, next) => {
     }
   })
 })
+
+/**
+ * 设置默认地址
+ */
+router.post('/setDefault', (req, res, next) => {
+  let userId = req.cookies.userId, addressId = req.body.addressId
+  if (!addressId) {
+    res.json({
+      status: "1003",
+      msg: '地址id为空'
+    })
+    return
+  }
+  User.findOne({ userId: userId }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      if (doc) {
+        let addressList = doc.addressList
+        addressList.forEach((item) => {
+          if (item.addressId == addressId) {
+            item.isDefault = true
+          } else {
+            item.isDefault = false
+          }
+        })
+      }
+      doc.save((err1, doc1) => {
+        if (err1) {
+          res.json({
+            status: "1",
+            msg: err1.message
+          })
+        } else {
+          res.json({
+            status: "0",
+            msg: "",
+            result: ''
+          })
+        }
+      })
+    }
+  })
+
+})
+
+
 module.exports = router;
