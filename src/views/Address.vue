@@ -112,7 +112,7 @@
               <ul>
                 <li
                   v-for="(item,index) in addressListFilter"
-                  @click="checkIndex=index"
+                  @click="checkIndex=index,selectedAddrId=item.addressId"
                   v-bind:class="{'check':checkIndex==index}"
                 >
                   <dl>
@@ -175,7 +175,7 @@
           <!-- shipping method-->
           <div class="page-title-normal checkout-title">
             <h2>
-              <span>Shipping method</span>
+              <span>配送方式</span>
             </h2>
           </div>
           <div class="shipping-method-wrap">
@@ -185,7 +185,7 @@
                   <div class="name">Standard shipping</div>
                   <div class="price">Free</div>
                   <div class="shipping-tips">
-                    <p>Once shipped，Order should arrive in the destination in 1-7 business days</p>
+                    <p>发货后，订单应在1-7个工作日内到达目的地</p>
                   </div>
                 </li>
               </ul>
@@ -195,7 +195,7 @@
             <router-link
               class="btn btn--m btn--red"
               v-bind:to="{path:'orderConfirm',query:{'addressId':selectedAddrId}}"
-            >Next</router-link>
+            >提交订单</router-link>
           </div>
         </div>
       </div>
