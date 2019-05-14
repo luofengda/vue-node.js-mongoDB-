@@ -121,7 +121,11 @@
                     <dd class="tel">{{item.tel}}</dd>
                   </dl>
                   <div class="addr-opration addr-del">
-                    <a href="javascript:;" class="addr-del-btn" @click="delAddress(item.addressId)">
+                    <a
+                      href="javascript:;"
+                      class="addr-del-btn"
+                      @click="delAddressConfirm(item.addressId)"
+                    >
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -273,22 +277,26 @@ export default {
     closeModal() {
       this.isMdShow = false;
     },
+    delAddressConfirm(addressId) {
+      this.addressId = addressId;
+      this.isMdShow = true;
+    },
     /**
      * 删除地址
      */
     delAddress() {
-      this.isMdShow=true
-      // axios
-      //   .post("/users/cartDel", {
-      //     productId: addressId
-      //   })
-      //   .then(res => {
-      //     let resData = res.data;
-      //     if (resData.status == 0) {
-      //       this.isMdShow = false;
-      //       this.init();
-      //     }
-      //   });
+      axios
+        .post("/users/delAddress", {
+          addressId: this.addressId
+        })
+        .then(res => {
+          let resData = res.data;
+          if (resData.status == 0) {
+            this.init();
+            this.addressId = "";
+            this.isMdShow = false;
+          }
+        });
     },
     /**
      * 展开更多

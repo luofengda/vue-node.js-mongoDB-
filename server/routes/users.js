@@ -252,4 +252,28 @@ router.post('/setDefault', (req, res, next) => {
 })
 
 
+/**
+ * 删除地址
+ */
+
+router.post('/delAddress', (req, res, next) => {
+  let userId = req.cookies.userId, addressId = req.body.addressId
+  User.update({ userId: userId }, { $pull: { 'addressList': { 'addressId': addressId } } }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      if (doc) {
+        res.json({
+          status: "0",
+          msg: "",
+          result: '删除成功'
+        })
+      }
+    }
+  })
+})
+
 module.exports = router;
