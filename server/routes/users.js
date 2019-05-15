@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/userModel')
+require('../util/util')
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource，进入路由了');
@@ -276,27 +277,74 @@ router.post('/delAddress', (req, res, next) => {
   })
 })
 
-/*****************************************  确认订单  *****************************************/
+/**
+ * 支付订单
+ */
+router.post('/payMent', (req, res, next) => {
+  let userId = req.cookies.userId, orderTotal = req.body.orderTotal, addressId = req.body.addressId
+  User.findOne({ userId: userId }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      if (doc) {
 
-// router.get('/cartList', (req, res, next) => {
-//   let userId = req.cookies.userId
-//   User.findOne({ userId: userId }, (err, doc) => {
-//     if (err) {
-//       res.json({
-//         status: "1",
-//         msg: err.message
-//       })
-//     } else {
-//       if (doc) {
-//         res.json({
-//           status: "0",
-//           msg: "",
-//           result: doc.orderList
-//         })
-//       }
-//     }
-//   })
-// })
+        var address = "", goodsList = []
+        // 获取当前用户的地址信息
+        doc.addressList.forEach((item) => {
+          if (addressId == item.addressId) {
+            address = item
+          }
+        })
+        //获取用户购物车的购买商品
+        doc.cartList.filter((item) => {
+     
+          if (item.checked == "1") {
+         
+            goodsList.push(item)
+          }
+        })
+        const paltform = '9527'
+        const r1 =Math.floor(Math.random()*10)
+        const r2 =Math.floor(Math.random()*10)
+        const sysData =new Date().Format('yyyyMMddhhmmss')
+        const createDate =new Date().Format('yyyy-MM-dd hh:mm:ss')
+        const orderId=paltform+r1+sysData+r2
+        const order = {
+          orderId: orderId,
+          orderTotal: orderTotal,
+          addressInfo: address,
+          goodsList: goodsList,
+          orderStatus: '1',
+          creatDate: createDate
+        }
+        console.log("*****order");
+        console.log(order);
+        console.log("*****order");
+        doc.orderList.push(order)
+        doc.save((err1, doc1) => {
+          if (err) {
+            res.json({
+              status: "1",
+              msg: err.message
+            })
+          } else {
+            res.json({
+              status: "0",
+              msg: "",
+              result: {
+                orderId: order.orderId,
+                orderTotal: order.orderTotal
+              }
+            })
+          }
+        })
+      }
+    }
+  })
+})
 
 
 

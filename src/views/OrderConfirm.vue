@@ -107,7 +107,7 @@
                 <span>{{tax|currency('$')}}</span>
               </li>
               <li class="order-total-price">
-                <span>Order total:</span>
+                <span>总金额:</span>
                 <span>{{orderTotal|currency('$')}}</span>
               </li>
             </ul>
@@ -116,10 +116,10 @@
 
         <div class="order-foot-wrap">
           <div class="prev-btn-wrap">
-            <router-link class="btn btn--m" to="/address">Previous</router-link>
+            <router-link class="btn btn--m" to="/address">上一步</router-link>
           </div>
           <div class="next-btn-wrap">
-            <button class="btn btn--m btn--red" @click="payMent">Proceed to payment</button>
+            <button class="btn btn--m btn--red" @click="payMent">支付金额</button>
           </div>
         </div>
       </div>
@@ -178,9 +178,11 @@
               }).then((response)=>{
                   let res = response.data;
                   if(res.status=="0"){
-                      this.$router.push({
-                          path:'/orderSuccess?orderId='+res.result.orderId
-                      })
+                    console.log('订单提交成功');
+                    console.log(res.result);
+                      // this.$router.push({
+                      //     path:'/orderSuccess?orderId='+res.result.orderId
+                      // })
                   }
               })
           }
