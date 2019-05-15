@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <nav-bread>
-      <span>Order Confirm</span>
+      <span>订单确认</span>
     </nav-bread>
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <defs>
@@ -42,7 +42,7 @@
 
         <!-- order list -->
         <div class="page-title-normal checkout-title">
-          <h2><span>Order content</span></h2>
+          <h2><span>订单内容</span></h2>
         </div>
         <div class="item-list-wrap confirm-item-list-wrap">
           <div class="cart-item order-item">
