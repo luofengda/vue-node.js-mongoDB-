@@ -180,9 +180,9 @@
                   if(res.status=="0"){
                     console.log('订单提交成功');
                     console.log(res.result);
-                      // this.$router.push({
-                      //     path:'/orderSuccess?orderId='+res.result.orderId
-                      // })
+                      this.$router.push({
+                          path:'/orderSuccess?orderId='+res.result.orderId
+                      })
                   }
               })
           }

@@ -300,18 +300,16 @@ router.post('/payMent', (req, res, next) => {
         })
         //获取用户购物车的购买商品
         doc.cartList.filter((item) => {
-     
           if (item.checked == "1") {
-         
             goodsList.push(item)
           }
         })
         const paltform = '9527'
-        const r1 =Math.floor(Math.random()*10)
-        const r2 =Math.floor(Math.random()*10)
-        const sysData =new Date().Format('yyyyMMddhhmmss')
-        const createDate =new Date().Format('yyyy-MM-dd hh:mm:ss')
-        const orderId=paltform+r1+sysData+r2
+        const r1 = Math.floor(Math.random() * 10)
+        const r2 = Math.floor(Math.random() * 10)
+        const sysData = new Date().Format('yyyyMMddhhmmss')
+        const createDate = new Date().Format('yyyy-MM-dd hh:mm:ss')
+        const orderId = paltform + r1 + sysData + r2
         const order = {
           orderId: orderId,
           orderTotal: orderTotal,
@@ -320,9 +318,6 @@ router.post('/payMent', (req, res, next) => {
           orderStatus: '1',
           creatDate: createDate
         }
-        console.log("*****order");
-        console.log(order);
-        console.log("*****order");
         doc.orderList.push(order)
         doc.save((err1, doc1) => {
           if (err) {
@@ -341,6 +336,68 @@ router.post('/payMent', (req, res, next) => {
             })
           }
         })
+      }
+    }
+  })
+})
+
+
+/**
+ * 订单提交成功页面
+ */
+router.get('/orderDetail', (req, res, next) => {
+  let userId = req.cookies.userId, orderId = req.param('orderId')
+  User.findOne({ userId: userId }, (err, userInfo) => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      if (userInfo) {
+        // console.log(userInfo);
+        let orderList = userInfo.orderList
+        console.log('*******************1');
+        console.log(orderList)
+        console.log('*******************1');
+        if (orderList.length > 0) {
+          let orderTotals = 0
+          orderList.forEach((item) => {
+            if (item.orderId == orderId) {
+              orderTotals = item.orderTotal
+            }
+          })
+          if (orderTotals > 0) {
+            res.json({
+              status: "0",
+              msg: "",
+              result: {
+                orderId: orderId,
+                orderTotals: orderTotals
+              }
+            })
+          } else {
+            res.json({
+              status: "120002",
+              msg: "没有该订单",
+              result: ''
+            })
+          }
+          // res.json({
+          //   status: "0",
+          //   msg: "",
+          //   result: {
+          //     orderId: orderId,
+          //     orderTotal: orderTotals
+          //   }
+          // })
+        } else {
+          res.json({
+            status: "120001",
+            msg: "当前用户没有订单信息",
+            result: ''
+          })
+        }
       }
     }
   })
