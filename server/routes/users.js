@@ -383,14 +383,6 @@ router.get('/orderDetail', (req, res, next) => {
               result: ''
             })
           }
-          // res.json({
-          //   status: "0",
-          //   msg: "",
-          //   result: {
-          //     orderId: orderId,
-          //     orderTotal: orderTotals
-          //   }
-          // })
         } else {
           res.json({
             status: "120001",
