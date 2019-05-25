@@ -23,9 +23,10 @@
             <dl class="filter-price">
               <dt>价钱:</dt>
               <dd>
-                <a href="javascript:void(0)" :class="{'cur':priceChecked==='all'}">All</a>
+                <a href="javascript:void(0)" :class="{'cur':priceChecked==='all'}"  @click="setPriceFilter('all')">All</a>
               </dd>
               <dd v-for="(item,index) in priceData">
+                <span>{{index}}</span>
                 <a
                   href="javascript:void(0)"
                   @click="setPriceFilter(index)"
@@ -211,7 +212,12 @@ export default {
      *价格过滤
      */
     setPriceFilter(index) {
-      this.priceChecked = index;
+      console.log(index);
+      if (index>=0) {
+        this.priceChecked = index;
+      } else {
+        this.priceChecked = 'all';
+      }
       this.page = 1;
       this.getGoodsList();
       this.closePop();
