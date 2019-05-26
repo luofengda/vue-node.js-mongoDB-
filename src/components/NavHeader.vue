@@ -54,7 +54,8 @@
       </div>
       <div class="navbar-right-container" style="display: flex;">
         <div class="navbar-menu-container">
-          <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
+          {{nickName}}
+          <span class="navbar-link" v-model="nickName" v-if="nickName"></span>
           <a
             href="javascript:void(0)"
             class="navbar-link"
@@ -131,11 +132,20 @@ export default {
       userName: "admin",
       userPwd: "123456",
       errorTip: false,
-      loginModalFlag: false,
-      nickName: ""
+      loginModalFlag: false
+      // nickName: ""
     };
   },
-  computed: {},
+  computed: {
+    //   ...mapState(['nickName','cartCount'])
+    // },
+    nickName() {
+      return this.$store.state.nickName;
+    }
+    /*cartCount(){
+          return this.$store.state.cartCount;
+        }*/
+  },
   mounted() {
     this.checkLogin();
   },
@@ -144,8 +154,16 @@ export default {
       axios.get("/users/checkLogin").then(res => {
         let resData = res.data;
         if (resData.status == "0") {
-          this.nickName = resData.result;
-            this.loginModalFlag = false;
+          // 接口调用的方式
+          //  this.nickName = resData.result;
+          // vuex方式
+          // this.$store.commit("updateUserInfo", resData.result);
+          this.$store.commit("updateUserInfo", resData.result);
+          this.loginModalFlag = false;
+        } else {
+          if (this.$route.push != "/goods") {
+            this.$route.push("/goods");
+          }
         }
       });
     },
@@ -162,7 +180,7 @@ export default {
         .then(res => {
           let resData = res.data;
           if (resData.status == "0") {
-            this.nickName = resData.result.userName;
+            this.$store.commit("updateUserInfo",resData.result.userName);
             this.errorTip = false;
             this.loginModalFlag = false;
           } else {
@@ -174,7 +192,7 @@ export default {
       axios.post("/users/logout").then(res => {
         let resData = res.data;
         if (resData.status == "0") {
-          this.nickName = "";
+         this.$store.commit("updateUserInfo",'');
         }
       });
     }
