@@ -64,7 +64,7 @@
           >登录</a>
           <a href="javascript:void(0)" class="navbar-link" v-else @click="logout">退出</a>
           <div class="navbar-cart-container">
-            <!-- <span class="navbar-cart-count" v-text="cartCount" v-if="cartCount"></span> -->
+            <span class="navbar-cart-count" v-text="cartCount" v-if="cartCount"></span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -141,10 +141,10 @@ export default {
     // },
     nickName() {
       return this.$store.state.nickName;
-    }
-    /*cartCount(){
+    },
+    cartCount(){
           return this.$store.state.cartCount;
-        }*/
+        }
   },
   mounted() {
     this.checkLogin();
@@ -157,8 +157,8 @@ export default {
           // 接口调用的方式
           //  this.nickName = resData.result;
           // vuex方式
-          // this.$store.commit("updateUserInfo", resData.result);
           this.$store.commit("updateUserInfo", resData.result);
+          this.getCartCount()
           this.loginModalFlag = false;
         } else {
           if (this.$route.push != "/goods") {
@@ -180,6 +180,7 @@ export default {
         .then(res => {
           let resData = res.data;
           if (resData.status == "0") {
+            this.getCartCount()
             this.$store.commit("updateUserInfo",resData.result.userName);
             this.errorTip = false;
             this.loginModalFlag = false;
@@ -195,6 +196,14 @@ export default {
          this.$store.commit("updateUserInfo",'');
         }
       });
+    },
+    getCartCount() {
+      axios.get('/users/getCartCount').then(res=>{
+        let resData = res.data;
+         if (resData.status == "0") {
+         this.$store.commit("updateCartCount",resData.result);
+        }
+      })
     }
   }
 };
