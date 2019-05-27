@@ -168,11 +168,7 @@
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a
-                      href="javascript:;"
-                      class="item-edit-btn"
-                      @click="delCartConfirm(item)"
-                    >
+                    <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -336,6 +332,7 @@ export default {
         .then(res => {
           let resData = res.data;
           if (resData.status == 0) {
+            this.$store.commit("updateCartCount", flag=="add"?1:-1);
           }
         });
     },
