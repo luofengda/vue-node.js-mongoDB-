@@ -142,9 +142,9 @@ export default {
     nickName() {
       return this.$store.state.nickName;
     },
-    cartCount(){
-          return this.$store.state.cartCount;
-        }
+    cartCount() {
+      return this.$store.state.cartCount;
+    }
   },
   mounted() {
     this.checkLogin();
@@ -158,11 +158,11 @@ export default {
           //  this.nickName = resData.result;
           // vuex方式
           this.$store.commit("updateUserInfo", resData.result);
-          this.getCartCount()
+          this.getCartCount();
           this.loginModalFlag = false;
         } else {
-          if (this.$route.push != "/goods") {
-            this.$route.push("/goods");
+          if (this.$route.path != "/goods") {
+            this.$route.push("/");
           }
         }
       });
@@ -180,8 +180,8 @@ export default {
         .then(res => {
           let resData = res.data;
           if (resData.status == "0") {
-            this.getCartCount()
-            this.$store.commit("updateUserInfo",resData.result.userName);
+            this.getCartCount();
+            this.$store.commit("updateUserInfo", resData.result.userName);
             this.errorTip = false;
             this.loginModalFlag = false;
           } else {
@@ -193,17 +193,17 @@ export default {
       axios.post("/users/logout").then(res => {
         let resData = res.data;
         if (resData.status == "0") {
-         this.$store.commit("updateUserInfo",'');
+          this.$store.commit("updateUserInfo", "");
         }
       });
     },
     getCartCount() {
-      axios.get('/users/getCartCount').then(res=>{
+      axios.get("/users/getCartCount").then(res => {
         let resData = res.data;
-         if (resData.status == "0") {
-         this.$store.commit("updateCartCount",resData.result);
+        if (resData.status == "0") {
+          this.$store.commit("updateCartCount", resData.result);
         }
-      })
+      });
     }
   }
 };

@@ -171,7 +171,7 @@
                     <a
                       href="javascript:;"
                       class="item-edit-btn"
-                      @click="delCartConfirm(item.productId)"
+                      @click="delCartConfirm(item)"
                     >
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
@@ -203,7 +203,11 @@
                 <span class="total-price">{{togglePrice|currency("$")}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red" v-bind:class="{'btn--dis':checkCount==0}" @click="checkAll">结算</a>
+                <a
+                  class="btn btn--red"
+                  v-bind:class="{'btn--dis':checkCount==0}"
+                  @click="checkAll"
+                >结算</a>
               </div>
             </div>
           </div>
@@ -233,29 +237,29 @@ export default {
     return {
       cartList: [],
       productId: "",
-      modalConfirm: false,
+      modalConfirm: false
       // checkAllFlag: false
     };
   },
-  computed:{
+  computed: {
     checkAllFlag() {
-      return this.checkCount==this.cartList.length
+      return this.checkCount == this.cartList.length;
     },
-    checkCount(){
-      let i =0
-      this.cartList.forEach((item)=>{
-        if(item.checked=="1") i++
-      })
-      return i
+    checkCount() {
+      let i = 0;
+      this.cartList.forEach(item => {
+        if (item.checked == "1") i++;
+      });
+      return i;
     },
     togglePrice() {
-      let money =0
-      this.cartList.forEach((item)=>{
-        if (item.checked=="1") {
-          money +=parseFloat(item.salePrice)*parseInt(item.productNum)
+      let money = 0;
+      this.cartList.forEach(item => {
+        if (item.checked == "1") {
+          money += parseFloat(item.salePrice) * parseInt(item.productNum);
         }
-      })
-      return money
+      });
+      return money;
     }
   },
   components: {
@@ -293,14 +297,15 @@ export default {
     delCart() {
       axios
         .post("/users/cartDel", {
-          productId: this.productId
+          productId: this.productId.productId
         })
         .then(res => {
           let resData = res.data;
           if (resData.status == 0) {
-            this.productId = "";
+            this.productId.productId = "";
             this.modalConfirm = false;
             this.init();
+            this.$store.commit("updateCartCount", -this.productId.productNum);
           }
         });
     },
@@ -339,28 +344,30 @@ export default {
      */
     toggleCheckAll() {
       let falg = !this.checkAllFlag;
-      this.cartList.forEach((item)=>{
-        item.checked=falg?"1":'0'
-      })
+      this.cartList.forEach(item => {
+        item.checked = falg ? "1" : "0";
+      });
 
-      axios.post('/users/editCheckAll',{
-        checkAll:falg
-      }).then((res)=>{
-         let resData = res.data;
+      axios
+        .post("/users/editCheckAll", {
+          checkAll: falg
+        })
+        .then(res => {
+          let resData = res.data;
           if (resData.status == 0) {
-            console.log('全选或者反选成功');
+            console.log("全选或者反选成功");
           }
-      })
+        });
     },
     /**
      * 跳转到地址列表页面
      */
-    checkAll(){
+    checkAll() {
       console.log(this.checkCount);
-      if (this.checkCount>0) {
+      if (this.checkCount > 0) {
         this.$router.push({
-          path:'/address'
-        })
+          path: "/address"
+        });
       }
     }
   }
